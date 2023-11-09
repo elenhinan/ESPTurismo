@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EspTurismo</title>
+  <link href="/css/bootstrap-5.3.2.min.css" rel="stylesheet">
+  <link href="/css/jquery-ui-1.13.2.min.css" rel="stylesheet">
+  <script src="/js/bootstrap-5.3.2.min.js"></script>
+  <script src="/js/jquery-3.7.1.min.js"></script>
+</head>
+<div class="container">
+  <div class="card mb-3 mt-3">
+    <div class="card-header">
+      <div id="title">
+        <H3>ESPturismo</H3>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <div id="title"><b>Network</b></div>
+            </div>
+            <div class="card-body">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Hostname</span>
+                </div>
+                <input id="network.hostname" type="text" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">PS IP</span>
+                </div>
+                <input id="network.playstation" type="text" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">WiFi SSID</span>
+                </div>
+                <input id="network.wifi_ssid" type="text" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Wifi pwd</span>
+                </div>
+                <input id="network.wifi_pwd" type="password" class="form-control">
+              </div>
+            </div>
+          </div>
+          <button type="button" id="apply" class="btn btn-primary mt-3">Apply</button>
+          <button type="button" id="save" class="btn btn-primary mt-3">Save</button>
+          <button disabled type="button" id="reboot" class="btn btn-primary mt-3">Reboot</button>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <div id="title"><b>Throttle</b></div>
+            </div>
+            <div class="card-body">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">ESP pin#</span>
+                </div>
+                <input id="accel.pin" type="number" min="0" max="35" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">PWM Output</span>
+                </div>
+                <input id="accel.output" type="number" min="0" max="255" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Slip threshold</span>
+                </div>
+                <input id="accel.threshold" type="number" step="0.1" min="0" max="5" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <label class="input-group-text" for="accel.mode">Mode</label>
+                <select class="form-select" id="accel.mode">
+                  <option value="0">Slip any</option>
+                  <option value="1">Slip avg</option>
+                  <option value="2">TCS</option>
+                  <option value="4">Rev limit</option>
+                </select>
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Min pedal</span>
+                </div>
+                <input id="accel.min_pedal" type="number" min="0" max="255" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Min speed (m/s)</span>
+                </div>
+                <input id="accel.min_vel" type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card">
+            <div class="card-header">
+              <div id="title"><b>Brake</b></div>
+            </div>
+            <div class="card-body">
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">ESP pin#</span>
+                </div>
+                <input id="decel.pin" type="number" min="0" max="35" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">PWM Output</span>
+                </div>
+                <input id="decel.output" type="number" min="0" max="255" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Slip threshold</span>
+                </div>
+                <input id="decel.threshold" type="number" step="0.1" min="0" max="5" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <label class="input-group-text" for="decel.mode">Mode</label>
+                <select class="form-select" id="decel.mode">
+                  <option value="0">Slip any</option>
+                  <option value="1">Slip avg</option>
+                  <option value="3">ASM</option>
+                </select>
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Min pedal</span>
+                </div>
+                <input id="decel.min_pedal" type="number" min="0" max="255" class="form-control">
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Min speed (m/s)</span>
+                </div>
+                <input id="decel.min_vel" type="number" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
+    </div>
+    <script>
+      $(document).ready(function () {
+        $.ajaxSetup({ cache: false });
+
+        // set values from json data
+        $.getJSON("/rest/settings", function (data) {
+          Object.keys(data).forEach(function(group) {
+            Object.keys(data[group]).forEach(function(key) {
+              $(`#${group}\\.${key}`).val(data[group][key])
+            });
+          });
+        });
+
+        // send values
+        $("#apply").click(function () {
+          settings = {}
+          $(":input").each(function(index) {
+            // get id, value, group and key for each input
+            let id = $(this)[0].id;
+            let value = $(this)[0].value;
+            
+            let group, key;
+            [group, key] = id.split('.');
+
+            // add to settings neste dict if value is present
+            if (value) {
+              let num_value = Number(value);
+              if(!settings[group])
+                settings[group] = {};
+              // send numbers as numbers, not string
+              if (isNaN(num_value))
+                settings[group][key] = value;
+              else
+                settings[group][key] = num_value; 
+            }
+          });
+          $.ajax({
+            url: '/rest/settings',
+            type: 'POST',
+            dataType: "json",
+            data: JSON.stringify(settings),
+            contentType: 'application/json',
+            success: function (msg) {
+
+            }
+          })
+        });
+
+        // tell espturismo to save settings to flash
+        $("#save").click(function () {
+          $.getJSON("/rest/save_settings", function (data) {
+            alert(data['save'] == true ? "Saved succesfully" : "Save failed!");
+          })
+        });
+        // tell espturismo to reboot
+        $("#reboot").click(function () {
+          $.getJSON("/rest/reboot", function (data) {
+            alert(data['reboot'] == true ? "Rebooting, wait a bit" : "Reboot failed!");
+          })
+        });
+      });
+    </script>
+
+</html>

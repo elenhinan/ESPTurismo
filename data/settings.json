@@ -1,0 +1,8 @@
+{
+    "network" : {
+        "wifi_ssid" : "<your ssid>",
+        "wifi_pwd" : "<your wifi password>",
+        "hostname" : "ESPturismo",
+        "playstation" : "<your playstation ip>"
+    }
+}
