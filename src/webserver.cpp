@@ -3,6 +3,7 @@
 WebServer webserver;
 
 AsyncWebServer server(80);
+AsyncEventSource events("/events");
 
 void WebServer::begin() {
     // setup MDNS for easy access
@@ -14,12 +15,13 @@ void WebServer::begin() {
     }
     
     // start webserver
-    routes();
+    setup_routes();
+    setup_events();
     server.begin();
     Serial.printf("Webserver started at http://%s.local\n", settings.hostname);
 }
 
-void WebServer::routes() {
+void WebServer::setup_routes() {
     // static files
     server.serveStatic("/css", LittleFS, "/www/css/");
     server.serveStatic("/js", LittleFS, "/www/js/");
@@ -62,16 +64,18 @@ void WebServer::routes() {
         request->send(response);
         ESP.restart();
     });
+}
 
-    // telemetry
-    server.on("/rest/telemetry", HTTP_GET,  [](AsyncWebServerRequest * request) {
-        AsyncResponseStream *response = request->beginResponseStream("application/json");
-        // create json document and convert to object
-        DynamicJsonDocument doc(JSON_MAX_SIZE );
-        JsonObject root = doc.to<JsonObject>();
-        // get settings to json
-        gt_telemetry.get_json(root);
-        serializeJson(root, *response);
-        request->send(response);
-    });
+void WebServer::setup_events() {
+    events.onConnect([](AsyncEventSourceClient *client) {
+    if(client->lastId()){
+      Serial.printf("Client reconnected! Last message ID that it got is: %u\n", client->lastId());
+    }
+    client->send("Hi!", NULL, millis(), 1000);
+  });
+  server.addHandler(&events);
+}
+
+void WebServer::send_event(const char* data, const char* name) {
+    events.send(data, name, millis(), 1000);
 }

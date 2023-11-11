@@ -10,9 +10,11 @@
 
 class WebServer {
     private:
-        void routes();
+        void setup_routes();
+        void setup_events();
     public:
         void begin();
+        void send_event(const char* data, const char* name);
 };
 
 extern WebServer webserver;

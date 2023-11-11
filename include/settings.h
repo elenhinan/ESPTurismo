@@ -31,22 +31,24 @@ class Settings {
         char hostname[32];
         char playstation[32];
 
-        unsigned int   decel_pin;
+        unsigned int   decel_pin1;
+        unsigned int   decel_pin2;
         unsigned int   decel_output;
-        double     decel_threshold;
-        enum mode decel_mode;
+        double         decel_threshold;
+        enum mode      decel_mode;
         unsigned int   decel_min_pedal;
-        double     decel_min_speed;
+        double         decel_min_speed;
 
-        unsigned int   accel_pin;
+        unsigned int   accel_pin1;
+        unsigned int   accel_pin2;
         unsigned int   accel_output;
-        double     accel_threshold;
-        enum mode accel_mode;
+        double         accel_threshold;
+        enum mode      accel_mode;
         unsigned int   accel_min_pedal;
-        double     accel_min_speed;
+        double         accel_min_speed;
 
-        void load(char* filename);
-        void save(char* filename);
+        void load(const char* filename);
+        void save(const char* filename);
         void from_json(JsonObject &root);
         void to_json(JsonObject &root);
 };

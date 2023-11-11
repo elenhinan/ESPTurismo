@@ -15,7 +15,6 @@ class GTtelemetry {
     private:
         // communication stuff
         WiFiUDP Udp;
-        const char* host_ip;
         s20_status_t status;
         uint8_t* key = (uint8_t*)GT_KEY;
         uint8_t data[GT_BUFFER];
@@ -46,19 +45,19 @@ class GTtelemetry {
         uint8_t get_uint16(unsigned int adr) { return *((uint16_t *)&data[adr]); };
         uint32_t get_uint32(unsigned int adr) { return *((uint32_t *)&data[adr]); };
 
-        void recieve();
-        bool decode();
+        bool recieve();
+        bool decrypt();
         void heartbeat();
         void analyze();
         void send_data();
     
     public:
-        void begin(const char* host_ip);
-        void update();
+        void begin();
+        bool update();
         bool getAccel();
         bool getDecel();
         bool isValid() { return millis() - last_packet < 100; }
-        void get_json(JsonObject &root);
+        void to_json(char* buffer, unsigned int buffer_size);
 };
 
 extern GTtelemetry gt_telemetry;
