@@ -21,7 +21,7 @@ function create_chart(keys) {
 		},
 		data: series,
       axisY: {
-         minimum: 0.1,
+         minimum: -0.1,
          maximum: 1.1
       }
 	});

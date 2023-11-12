@@ -41,7 +41,7 @@ Click apply, save and then reboot.
 
 Alternatively, update the settings.json in the data folder with your wifi settings.
 
-You should now be able to connect to http://ESPturismo.local after a short while. If GT7 is running telemitry
+You should now be able to connect to http://ESPturismo.local after a short while. If GT7 is running telemetry
 data should show up, and you can configure your rumble motor settings.
 
 ## Sources
