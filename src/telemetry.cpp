@@ -56,27 +56,26 @@ void GTtelemetry::heartbeat() {
 
 void GTtelemetry::analyze() {
     // car speed in m/s
-    car_speed = get_float(0x4c);
+    car_speed = get_float(0x4c) * 3.6; // from m/s to km/h
     slip_decel_any = false;
     slip_accel_any = false;
     wheel_speed_avg = 0;
-    float wheel_slip_ratio;
     for (int i=0;i<4;i++) {
         // wheel rotations (radians/s) times tire radius (m)
-        wheel_speed[i] = abs(get_float(0xA4+4*i) * get_float(0xB4+4*i));
-        wheel_slip_ratio = wheel_speed[i] / car_speed;
-        slip_decel_any |= wheel_slip_ratio < settings.decel_threshold;
-        slip_accel_any |= wheel_slip_ratio > settings.accel_threshold;
+        wheel_speed[i] = abs(get_float(0xA4+4*i) * get_float(0xB4+4*i)) * 3.6;
+        wheel_slip[i] = wheel_speed[i] / car_speed;
+        slip_decel_any |= wheel_slip[i] < settings.decel_threshold;
+        slip_accel_any |= wheel_slip[i] > settings.accel_threshold;
         wheel_speed_avg += wheel_speed[i];
     }
     wheel_speed_avg /= 4;
-    wheel_slip_ratio = wheel_speed_avg / car_speed;
-    slip_decel_avg = wheel_slip_ratio < settings.decel_threshold;
-    slip_accel_avg = wheel_slip_ratio > settings.accel_threshold;
+    wheel_slip_avg = wheel_speed_avg / car_speed;
+    slip_decel_avg = wheel_slip_avg < settings.decel_threshold;
+    slip_accel_avg = wheel_slip_avg > settings.accel_threshold;
 
     // pedals
-    accel_pedal = get_uint8(0x91);
-    decel_pedal = get_uint8(0x92);
+    accel_pedal = float(get_uint8(0x91))/255;
+    decel_pedal = float(get_uint8(0x92))/255;
 
     // flags
     uint16_t flags = get_uint16(0x8e);
@@ -133,12 +132,12 @@ void GTtelemetry::to_json(char* buffer, unsigned int buffer_size) {
         buffer[0] = 0;
     } else {
         DynamicJsonDocument doc(JSON_MAX_SIZE);
-        doc["car speed"] = car_speed;
-        doc["wheel FL"] = wheel_speed[0];
-        doc["wheel FR"] = wheel_speed[1];
-        doc["wheel RL"] = wheel_speed[2];
-        doc["wheel RR"] = wheel_speed[3];
-        doc["wheel avg"] = wheel_speed_avg;
+        //doc["car speed"] = car_speed;
+        doc["slip FL"] = wheel_slip[0];
+        doc["slip FR"] = wheel_slip[1];
+        doc["slip RL"] = wheel_slip[2];
+        doc["slip RR"] = wheel_slip[3] ;
+        doc["slip avg"] = wheel_slip_avg;
         doc["brake"] = decel_pedal;
         doc["throttle"] = accel_pedal;
         doc["active"] = car_active;

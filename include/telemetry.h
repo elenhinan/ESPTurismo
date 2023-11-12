@@ -26,8 +26,10 @@ class GTtelemetry {
         float car_speed;
         float wheel_speed[4];
         float wheel_speed_avg;
-        uint8_t decel_pedal;
-        uint8_t accel_pedal;
+        float wheel_slip[4];
+        float wheel_slip_avg;
+        float decel_pedal;
+        float accel_pedal;
         bool car_active;
         bool rev_limit;
         bool tcs_active;

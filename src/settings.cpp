@@ -33,19 +33,19 @@ void Settings::from_json(JsonObject &root) {
 
     decel_pin1          = root["decel"]["pin1"]      | 32;
     decel_pin2          = root["decel"]["pin2"]      | 33;
-    decel_output        = root["decel"]["output"]    | 128u;
-    decel_threshold     = root["decel"]["threshold"] | 0.9;
+    decel_output        = root["decel"]["output"]    | 0.5f;
+    decel_threshold     = root["decel"]["threshold"] | 0.9f;
     decel_mode          = root["decel"]["mode"]      | AVG_WHEEL;
-    decel_min_pedal     = root["decel"]["min_pedal"] | 8u;
-    decel_min_speed     = root["decel"]["min_vel"]   | 1.0;
+    decel_min_pedal     = root["decel"]["min_pedal"] | 0.02f;
+    decel_min_speed     = root["decel"]["min_vel"]   | 1.0f;
 
     accel_pin1          = root["accel"]["pin1"]      | 25;
     accel_pin2          = root["accel"]["pin2"]      | 26;
-    accel_output        = root["accel"]["output"]    | 128u;
-    accel_threshold     = root["accel"]["threshold"] | 1.1;
+    accel_output        = root["accel"]["output"]    | 0.5f;
+    accel_threshold     = root["accel"]["threshold"] | 1.1f;
     accel_mode          = root["accel"]["mode"]      | AVG_WHEEL;
-    accel_min_pedal     = root["accel"]["min_pedal"] | 8u;
-    accel_min_speed     = root["accel"]["min_vel"]   | 1.0;
+    accel_min_pedal     = root["accel"]["min_pedal"] | 0.02f;
+    accel_min_speed     = root["accel"]["min_vel"]   | 1.0f;
 
     Serial.println("Loading config:");
     serializeJsonPretty(root, Serial);

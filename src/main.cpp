@@ -9,22 +9,13 @@ void setup() {
   // setup filesystem
   if(!LittleFS.begin(true)){
     Serial.println("An Error has occurred while mounting LittleFS");
-    return;
   }
 
-  // load settings
   settings.load(settings_file);
-
-  // setup ports
-  setup_ports();
-
-  // Setup WiFi
+  setup_pins();
   setup_wifi();
-
-  // setup webserver
+  setup_ota();
   webserver.begin();
-
-  // Set up telemetry communication
   gt_telemetry.begin();
 }
 
@@ -32,8 +23,8 @@ void loop() {
   // check for telemetry updates
   if (gt_telemetry.update()) {
     // set rumble output
-    analogWrite(settings.accel_pin1, gt_telemetry.getAccel()?settings.accel_output:0);
-    analogWrite(settings.decel_pin1, gt_telemetry.getDecel()?settings.decel_output:0);
+    analogWrite(settings.accel_pin1, gt_telemetry.getAccel()?int(settings.accel_output*255):0);
+    analogWrite(settings.decel_pin1, gt_telemetry.getDecel()?int(settings.decel_output*255):0);
     // send event
     char event_buffer[EVENT_BUFFER_SIZE];
     gt_telemetry.to_json(event_buffer, EVENT_BUFFER_SIZE);
@@ -45,11 +36,11 @@ void loop() {
   }
 }
 
-void setup_ports() {
-  // setupo throttle pins
+void setup_pins() {
+  // setup throttle pins
   pinMode(settings.accel_pin1, OUTPUT);
   digitalWrite(settings.accel_pin1, 0);
-  if (settings.accel_pin2 > -1)
+  if (settings.accel_pin2)
   {
     pinMode(settings.accel_pin2, OUTPUT);
     digitalWrite(settings.accel_pin2, 0);
@@ -57,7 +48,7 @@ void setup_ports() {
   // setup brake pins
   pinMode(settings.decel_pin1, OUTPUT);
   digitalWrite(settings.decel_pin1, 0);
-  if (settings.decel_pin2 > -1)
+  if (settings.decel_pin2)
   {
     pinMode(settings.decel_pin2, OUTPUT);
     digitalWrite(settings.decel_pin2, 0);
@@ -95,4 +86,39 @@ void setup_wifi() {
   }
   digitalWrite(PIN_LED_WIFI, HIGH);
   Serial.printf("\nWifi connected to %s, ip: %s\n", WiFi.SSID(),WiFi.localIP().toString());
+}
+
+void setup_ota() {
+  ArduinoOTA.setHostname(settings.hostname);
+  ArduinoOTA.setPassword(OTA_PASSWORD);
+
+  ArduinoOTA
+    .onStart([]() {
+      String type;
+      if (ArduinoOTA.getCommand() == U_FLASH)
+        type = "sketch";
+      else // U_SPIFFS
+        type = "filesystem";
+        LittleFS.end();
+
+      // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+      Serial.println("Start updating " + type);
+    })
+    .onEnd([]() {
+      Serial.println("\nEnd");
+    })
+    .onProgress([](unsigned int progress, unsigned int total) {
+      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    })
+    .onError([](ota_error_t error) {
+      Serial.printf("Error[%u]: ", error);
+      if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+      else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+      else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+      else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+      else if (error == OTA_END_ERROR) Serial.println("End Failed");
+    });
+
+  ArduinoOTA.begin();
+  Serial.printf("Ready for OTA @ %s.local, password %s",settings.hostname, OTA_PASSWORD);
 }
