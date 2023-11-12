@@ -30,3 +30,7 @@ Sources for getting data from Gran Turismo:
     https://github.com/Nenkai/PDTools/blob/master/PDTools.SimulatorInterface/SimulatorPacket.cs
 
 ![screenshot](docs/screenshot.png)
+
+One issue one might have, is electrical noise from the motors disturbing the esp32 or it's wifi reception.
+I'm waiting for some capacitors for soldering between the motor connectors and the casing to reduce this,
+and maybe also adding a choke between the ESP32 VCC/GND rail and the motor driver.
