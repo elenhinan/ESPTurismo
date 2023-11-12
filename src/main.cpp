@@ -1,6 +1,8 @@
 #include "main.h"
 
 //DNSServer dnsServer;
+Rumble rumble_accel;
+Rumble rumble_decel;
 
 void setup() {
   // setup serial port
@@ -13,6 +15,8 @@ void setup() {
 
   settings.load(settings_file);
   setup_pins();
+  rumble_accel.begin(settings.accel_pin1, settings.accel_pin2, settings.accel_output);
+  rumble_decel.begin(settings.decel_pin1, settings.decel_pin2, settings.decel_output);
   setup_wifi();
   setup_ota();
   webserver.begin();
@@ -23,8 +27,8 @@ void loop() {
   // check for telemetry updates
   if (gt_telemetry.update()) {
     // set rumble output
-    analogWrite(settings.accel_pin1, gt_telemetry.getAccel()?int(settings.accel_output*255):0);
-    analogWrite(settings.decel_pin1, gt_telemetry.getDecel()?int(settings.decel_output*255):0);
+    rumble_accel.set_output(gt_telemetry.getAccel());
+    rumble_decel.set_output(gt_telemetry.getDecel());
     // send event
     char event_buffer[EVENT_BUFFER_SIZE];
     gt_telemetry.to_json(event_buffer, EVENT_BUFFER_SIZE);
@@ -34,25 +38,11 @@ void loop() {
     digitalWrite(settings.accel_pin1, 0);
     digitalWrite(settings.decel_pin1, 0);
   }
+  rumble_accel.update();
+  rumble_decel.update();
 }
 
 void setup_pins() {
-  // setup throttle pins
-  pinMode(settings.accel_pin1, OUTPUT);
-  digitalWrite(settings.accel_pin1, 0);
-  if (settings.accel_pin2)
-  {
-    pinMode(settings.accel_pin2, OUTPUT);
-    digitalWrite(settings.accel_pin2, 0);
-  }
-  // setup brake pins
-  pinMode(settings.decel_pin1, OUTPUT);
-  digitalWrite(settings.decel_pin1, 0);
-  if (settings.decel_pin2)
-  {
-    pinMode(settings.decel_pin2, OUTPUT);
-    digitalWrite(settings.decel_pin2, 0);
-  }
   // setup leds
   pinMode(PIN_LED_WIFI, OUTPUT);
   pinMode(PIN_LED_TELEMETRY, OUTPUT); 

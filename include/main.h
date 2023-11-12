@@ -8,6 +8,7 @@
 #include "config.h"
 #include "telemetry.h"
 #include "webserver.h"
+#include "outputs.h"
 
 const char* settings_file = SETTINGS_FILE;
 
