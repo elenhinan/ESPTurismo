@@ -31,18 +31,18 @@ void Settings::from_json(JsonObject &root) {
     strlcpy(hostname, root["network"]["hostname"] | "", sizeof(hostname));
     strlcpy(playstation, root["network"]["playstation"] | "", sizeof(playstation));
 
-    decel_pin1          = root["decel"]["pin1"]      | 32;
-    decel_pin2          = root["decel"]["pin2"]      | 33;
+    decel_pin1          = root["decel"]["pin1"]      | 25;
+    decel_pin2          = root["decel"]["pin2"]      | 26;
     decel_output        = root["decel"]["output"]    | 0.5f;
     decel_threshold     = root["decel"]["threshold"] | 0.9f;
     decel_mode          = root["decel"]["mode"]      | AVG_WHEEL;
     decel_min_pedal     = root["decel"]["min_pedal"] | 0.02f;
     decel_min_speed     = root["decel"]["min_vel"]   | 1.0f;
 
-    accel_pin1          = root["accel"]["pin1"]      | 25;
-    accel_pin2          = root["accel"]["pin2"]      | 26;
+    accel_pin1          = root["accel"]["pin1"]      | 32;
+    accel_pin2          = root["accel"]["pin2"]      | 33;
     accel_output        = root["accel"]["output"]    | 0.5f;
-    accel_threshold     = root["accel"]["threshold"] | 1.1f;
+    accel_threshold     = root["accel"]["threshold"] | 0.8f;
     accel_mode          = root["accel"]["mode"]      | AVG_WHEEL;
     accel_min_pedal     = root["accel"]["min_pedal"] | 0.02f;
     accel_min_speed     = root["accel"]["min_vel"]   | 1.0f;

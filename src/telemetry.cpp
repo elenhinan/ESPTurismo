@@ -63,15 +63,22 @@ void GTtelemetry::analyze() {
     for (int i=0;i<4;i++) {
         // wheel rotations (radians/s) times tire radius (m)
         wheel_speed[i] = abs(get_float(0xA4+4*i) * get_float(0xB4+4*i)) * 3.6;
-        wheel_slip[i] = wheel_speed[i] / car_speed;
-        slip_decel_any |= wheel_slip[i] < settings.decel_threshold;
-        slip_accel_any |= wheel_slip[i] > settings.accel_threshold;
+        // calculate wheel grip: 0 = zero grip, 1 = full grip
+        float accel_grip = car_speed / wheel_speed[i];
+        float decel_grip = wheel_speed[i] / car_speed;
+        slip_decel_any |= decel_grip < settings.decel_threshold;
+        slip_accel_any |= accel_grip < settings.accel_threshold;
+        wheel_slip[i] = min(accel_grip, decel_grip);
         wheel_speed_avg += wheel_speed[i];
     }
     wheel_speed_avg /= 4;
-    wheel_slip_avg = wheel_speed_avg / car_speed;
-    slip_decel_avg = wheel_slip_avg < settings.decel_threshold;
-    slip_accel_avg = wheel_slip_avg > settings.accel_threshold;
+    float accel_grip_avg = car_speed / wheel_speed_avg;
+    float decel_grip_avg = wheel_speed_avg / car_speed;
+    slip_accel_avg = accel_grip_avg < settings.accel_threshold;
+    slip_decel_avg = decel_grip_avg < settings.decel_threshold;
+    wheel_slip_avg = min(accel_grip_avg, decel_grip_avg);
+
+    // egen slip for decel og accel, 0-1.. w/c vs c/w
 
     // pedals
     accel_pedal = float(get_uint8(0x91))/255;
@@ -114,7 +121,7 @@ bool GTtelemetry::getAccel() {
 
 bool GTtelemetry::getDecel() {
     // no rumble if car not active, not moving, or pedal not depressed
-    if (!car_active || car_speed < settings.decel_min_speed || accel_pedal < settings.decel_min_pedal)
+    if (!car_active || car_speed < settings.decel_min_speed || decel_pedal < settings.decel_min_pedal)
         return false;
     bool active;
     switch(settings.decel_mode) {

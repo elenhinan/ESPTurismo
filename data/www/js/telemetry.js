@@ -19,7 +19,11 @@ function create_chart(keys) {
 		title:{
 			text: undefined              
 		},
-		data: series
+		data: series,
+      axisY: {
+         minimum: 0.1,
+         maximum: 1.1
+      }
 	});
 	chart.render();
 }

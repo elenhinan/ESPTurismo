@@ -35,8 +35,8 @@ void loop() {
     webserver.send_event(event_buffer, "telemetry");
   } else if (!gt_telemetry.isValid()) {
     // if no valid telemetry, turn of rumble
-    digitalWrite(settings.accel_pin1, 0);
-    digitalWrite(settings.decel_pin1, 0);
+    rumble_accel.set_output(false);
+    rumble_decel.set_output(false);
   }
   rumble_accel.update();
   rumble_decel.update();
@@ -110,5 +110,5 @@ void setup_ota() {
     });
 
   ArduinoOTA.begin();
-  Serial.printf("Ready for OTA @ %s.local, password %s",settings.hostname, OTA_PASSWORD);
+  Serial.printf("Ready for OTA @ %s.local, password %s\n",settings.hostname, OTA_PASSWORD);
 }
