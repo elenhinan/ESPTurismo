@@ -44,7 +44,7 @@ class GTtelemetry {
         // extract data from package
         float get_float(unsigned int adr)   { return *((float *)&data[adr]); };
         uint8_t get_uint8(unsigned int adr) { return data[adr]; };
-        uint8_t get_uint16(unsigned int adr) { return *((uint16_t *)&data[adr]); };
+        uint16_t get_uint16(unsigned int adr) { return *((uint16_t *)&data[adr]); };
         uint32_t get_uint32(unsigned int adr) { return *((uint32_t *)&data[adr]); };
 
         bool recieve();
