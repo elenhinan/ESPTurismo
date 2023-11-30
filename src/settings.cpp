@@ -37,7 +37,7 @@ void Settings::from_json(JsonObject &root) {
     decel_threshold     = root["decel"]["threshold"] | 0.8f;
     decel_mode          = root["decel"]["mode"]      | ANY_WHEEL;
     decel_min_pedal     = root["decel"]["min_pedal"] | 0.02f;
-    decel_min_speed     = root["decel"]["min_vel"]   | 1.0f;
+    decel_min_speed     = root["decel"]["min_vel"]   | 10.0f;
 
     accel_pin1          = root["accel"]["pin1"]      | PIN_ACCEL1;
     accel_pin2          = root["accel"]["pin2"]      | PIN_ACCEL2;

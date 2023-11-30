@@ -19,30 +19,31 @@ Output level can be set per pedal, to a constant level (so no dynamic rumbling a
 
 ## Hardware:
 ### Parts needed
-* DoIT ESP32 devkit v1 (or other esp32 will do fine as well, configure the pins accordingly)
+* Wemos S2 mini / DoIT ESP32 devkit v1
 * A dual H-bridge motor controller (e.g mini L298N driver, https://www.aliexpress.com/item/33012645746.html)
 * 2x rumble motors, 5-6V (e.g https://www.aliexpress.com/item/4001082464065.html)
 
 ### Connections
 Connect VCC and GND from ESP32 to L298 driver, motors should run fine on 5V. Maybe add a choke on the power lines
-Connect motor driver inputs to port 25,26,32 and 33
-Twist the motor wires to reduce EMI, add ceramic capacitors from motor inputs to chassis
+Connect motor driver inputs to port 2,4,6,8 for s2 mini or 25,26,32,33 for ESP32 devkit
+Twist the motor wire-pair to reduce EMI, add ceramic capacitors (I use 68 nF) from motor inputs to chassis (so four in total)
 
 ### Build and upload filesystem:
-platformIO->esp32doit->Platform->Build Filesystem Image
-platformIO->esp32doit->Platform->Upload Filesystem Image
-platformIO->Build
-platformIO->Upload
+Use Visual Studio Code with PlatformIO:
+* edit settings.json with your WiFi SSID and password (optional)
+* platformIO->esp32doit->Platform->Build Filesystem Image
+* platformIO->esp32doit->Platform->Upload Filesystem Image
+* platformIO->Build
+* platformIO->Upload
 
 ### Configuring
-Connect to usb power. After one minute ESP should go into access point mode if it can't connect to WiFi.
-Connect with phone to http://10.0.0.1 and configure your wifi settins along with PS4/PS5 IP address.
-Click apply, save and then reboot.
-
-Alternatively, update the settings.json in the data folder with your wifi settings.
+Connect to usb power. After one minute ESP should go into access point mode if it can't connect to WiFi. In that case,
+connect phone to ESPturismo wifi AP. Go to http://10.0.0.1 in your browser and configure your wifi settings (if needed)
+along with PS4/PS5 IP address. Click apply, save and then reboot.
 
 You should now be able to connect to http://ESPturismo.local after a short while. If GT7 is running telemetry
-data should show up, and you can configure your rumble motor settings.
+data should show up, and you can configure your rumble motor settings. Click apply to test settings, and save if you're
+satisfied.
 
 ## Sources
 * https://github.com/Bornhall/gt7telemetry/blob/main/gt7telemetry.py
@@ -50,6 +51,5 @@ data should show up, and you can configure your rumble motor settings.
 
 ![screenshot](docs/screenshot.png)
 
-One issue one might have, is electrical noise from the motors disturbing the esp32 or it's wifi reception.
-I'm waiting for some capacitors for soldering between the motor connectors and the casing to reduce this,
-and maybe also adding a choke between the ESP32 VCC/GND rail and the motor driver.
+If you have problems with a cheap wemos s2 clone rebooting, google "s2 mini capacitor fix" to see which capacitor needs
+soldering. This should fix the instability. Buy an original to avoid the hassle.
