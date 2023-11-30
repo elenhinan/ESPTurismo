@@ -4,13 +4,21 @@
 Rumble rumble_accel;
 Rumble rumble_decel;
 
+#ifdef ARDUINO_LOLIN_S2_MINI
+  USBCDC SerialUSB;
+#endif
+
 void setup() {
   // setup serial port
-  Serial.begin(115200);
+  DebugSerial.begin(115200);
+#ifdef ARDUINO_LOLIN_S2_MINI  
+  USB.begin();
+  delay(5000);
+#endif
 
   // setup filesystem
   if(!LittleFS.begin(true)){
-    Serial.println("An Error has occurred while mounting LittleFS");
+    DebugSerial.println("An Error has occurred while mounting LittleFS");
   }
 
   settings.load(settings_file);
@@ -52,7 +60,7 @@ void setup_pins() {
 }
 
 void setup_wifi() {
-  Serial.print("Connecting to WiFi");
+  DebugSerial.print("Connecting to WiFi");
   WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE);
   WiFi.setHostname(settings.hostname);
   // try to connect to wifi
@@ -61,7 +69,7 @@ void setup_wifi() {
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(PIN_LED_WIFI, !digitalRead(PIN_LED_WIFI));
     delay(500);
-    Serial.print(".");
+    DebugSerial.print(".");
     // stop trying to connect after timeout
     if (millis() - wifi_start > WIFI_TIMEOUT)
       break;
@@ -75,7 +83,7 @@ void setup_wifi() {
     WiFi.softAP(settings.hostname, NULL);
   }
   digitalWrite(PIN_LED_WIFI, HIGH);
-  Serial.printf("\nWifi connected to %s, ip: %s\n", WiFi.SSID(),WiFi.localIP().toString());
+  DebugSerial.printf("\nWifi connected to %s, ip: %s\n", WiFi.SSID(),WiFi.localIP().toString());
 }
 
 void setup_ota() {
@@ -92,23 +100,23 @@ void setup_ota() {
         LittleFS.end();
 
       // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-      Serial.println("Start updating " + type);
+      DebugSerial.println("Start updating " + type);
     })
     .onEnd([]() {
-      Serial.println("\nEnd");
+      DebugSerial.println("\nEnd");
     })
     .onProgress([](unsigned int progress, unsigned int total) {
-      Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+      DebugSerial.printf("Progress: %u%%\r", (progress / (total / 100)));
     })
     .onError([](ota_error_t error) {
-      Serial.printf("Error[%u]: ", error);
-      if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-      else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-      else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-      else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-      else if (error == OTA_END_ERROR) Serial.println("End Failed");
+      DebugSerial.printf("Error[%u]: ", error);
+      if (error == OTA_AUTH_ERROR) DebugSerial.println("Auth Failed");
+      else if (error == OTA_BEGIN_ERROR) DebugSerial.println("Begin Failed");
+      else if (error == OTA_CONNECT_ERROR) DebugSerial.println("Connect Failed");
+      else if (error == OTA_RECEIVE_ERROR) DebugSerial.println("Receive Failed");
+      else if (error == OTA_END_ERROR) DebugSerial.println("End Failed");
     });
 
   ArduinoOTA.begin();
-  Serial.printf("Ready for OTA @ %s.local, password %s\n",settings.hostname, OTA_PASSWORD);
+  DebugSerial.printf("Ready for OTA @ %s.local, password %s\n",settings.hostname, OTA_PASSWORD);
 }

@@ -10,6 +10,16 @@
 #include "webserver.h"
 #include "outputs.h"
 
+#ifdef ARDUINO_LOLIN_S2_MINI
+    #define DebugSerial SerialUSB
+    #include <USB.h>
+#elif ARDUINO_ESP32_DEV
+    #define DebugSerial Serial
+#endif
+
+
+
+
 const char* settings_file = SETTINGS_FILE;
 
 void setup_pins();
