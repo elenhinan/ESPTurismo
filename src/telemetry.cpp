@@ -138,7 +138,7 @@ void GTtelemetry::to_json(char* buffer, unsigned int buffer_size) {
     if (!isValid()) {
         buffer[0] = 0;
     } else {
-        DynamicJsonDocument doc(JSON_MAX_SIZE);
+        JsonDocument doc;
         //doc["car speed"] = car_speed;
         doc["slip FL"] = wheel_slip[0];
         doc["slip FR"] = wheel_slip[1];
