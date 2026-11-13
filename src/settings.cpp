@@ -5,7 +5,7 @@ Settings settings;
 void Settings::load(const char* filename) {
     // parse settings file from filesystem
     File file = LittleFS.open(filename);
-    DynamicJsonDocument doc(JSON_MAX_SIZE);
+    JsonDocument doc;
     DeserializationError error = deserializeJson(doc, file);
 
     if (error)
@@ -18,7 +18,7 @@ void Settings::load(const char* filename) {
 
 void Settings::save(const char* filename) {
     File file = LittleFS.open(filename, "w+");
-    DynamicJsonDocument doc(JSON_MAX_SIZE);
+    JsonDocument doc;
     JsonObject root = doc.to<JsonObject>();
     settings.to_json(root);
     serializeJson(root, file);

@@ -33,7 +33,7 @@ void WebServer::setup_routes() {
     server.on("/rest/settings", HTTP_GET,  [](AsyncWebServerRequest * request) {
         AsyncResponseStream *response = request->beginResponseStream("application/json");
         // create json document and convert to object
-        DynamicJsonDocument doc(JSON_MAX_SIZE );
+        JsonDocument doc;
         JsonObject root = doc.to<JsonObject>();
         // get settings to json
         settings.to_json(root);
@@ -48,7 +48,7 @@ void WebServer::setup_routes() {
            settings.from_json(root);
            AsyncWebServerResponse *response = request->beginResponse(200, "text/plain", "ok");
            request->send(response);
-       }, JSON_MAX_SIZE);
+       });
     server.addHandler(json_setter);
 
     // save settings
